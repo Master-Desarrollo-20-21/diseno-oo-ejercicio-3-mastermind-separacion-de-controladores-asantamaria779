@@ -1,0 +1,75 @@
+@startuml
+class mastermind.models.Game {
+	-int MAX_ATTEMPTS
+	-int numberOfAttempts
+	-boolean isWinner
+	+Game()
+	+void reset()
+	+int getMaxAttempts()
+	+String getProposedCombination(int)
+	+int getNumberOfBlacks(int)
+	+int getNumberOfWhites(int)
+	+int getNumberOfAttempts()
+	+void increaseNumberOfAttempts()
+	+boolean isOver()
+	+boolean isWinner()
+	+boolean isCombinationValidColors(String)
+	+boolean isCombinationValidLength(String)
+	+void checkWinner()
+	+String getCombinationValidColors()
+	+void addResult(ProposedCombination)
+}
+
+class mastermind.models.Result {
+	-int numberOfBlacks
+	-int numberOfWhites
+	#Result(ProposedCombination,int,int)
+	#boolean isWinner()
+	#ProposedCombination getProposedCombination()
+	#String getProposedCombinationColors()
+	#int getNumberOfBlacks()
+	#int getNumberOfWhites()
+}
+
+class mastermind.models.SecretCombination {
+	#SecretCombination()
+	-{static}String makeRandom()
+	#Result check(ProposedCombination)
+	#String validColors()
+}
+
+class mastermind.models.ProposedCombination {
+	+ProposedCombination(String)
+	#boolean contains(char,int)
+	#boolean contains(char)
+}
+
+abstract class mastermind.models.Combination {
+	-{static}int LENGTH
+	-String colors
+	#Combination(String)
+	#boolean isValidLength(String)
+	+{static}int length()
+	#boolean isValidColors(String)
+	#char getColor(int)
+	#String getColors()
+}
+
+class mastermind.models.State {
+	-StateValue stateValue
+	+State()
+	#void reset()
+	+void next()
+	+void previous()
+	+StateValue getValueState()
+}
+
+mastermind.models.Result *-down-> mastermind.models.ProposedCombination
+mastermind.models.Game *-down-> "1" mastermind.models.SecretCombination 
+mastermind.models.Game o-down-> "[0..10]" mastermind.models.Result
+mastermind.models.Combination <|-- mastermind.models.SecretCombination
+mastermind.models.Combination <|-- mastermind.models.ProposedCombination
+mastermind.models.Game ..> mastermind.models.ProposedCombination
+mastermind.models.SecretCombination .left.> mastermind.models.ProposedCombination
+mastermind.models.State .right.> mastermind.types.StateValue
+@enduml

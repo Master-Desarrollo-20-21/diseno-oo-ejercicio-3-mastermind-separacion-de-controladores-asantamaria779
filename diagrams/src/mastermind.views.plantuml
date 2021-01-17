@@ -1,0 +1,17 @@
+@startuml
+interface mastermind.controllers.ControllersVisitor {
+}
+
+abstract class mastermind.views.View {
+	+void interact(Controller controller)
+}
+
+abstract class mastermind.views.ErrorView {
+	-Error error
+	#ErrorView(Error error)
+	#Error getError()
+	#String getErrorMessage()
+}
+
+mastermind.controllers.ControllersVisitor <|.. mastermind.views.View
+@enduml

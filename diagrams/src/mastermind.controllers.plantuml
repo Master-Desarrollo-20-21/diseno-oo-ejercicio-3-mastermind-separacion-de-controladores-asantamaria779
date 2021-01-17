@@ -1,0 +1,74 @@
+@startuml
+class mastermind.controllers.Logic {
+	-StateValue[]
+	-Map<StateValue,Controller>
+	+Logic()
+	+Controller getController()
+}
+
+interface mastermind.controllers.ControllersVisitor {
+	void visit(StartController)
+	void visit(PlayController)
+	void visit(ResumeController)
+}
+
+abstract class mastermind.controllers.Controller {
+	#Controller(Game,State)
+	#Game getGame()
+	#State getState()
+	+{abstract}void accept(ControllersVisitor)
+}
+
+class mastermind.controllers.PlayController {
+	#PlayController(Game,State)
+	+int getMaxAttempts()
+	+int getNumberOfAttempts()
+	+String getProposedCombination(int)
+	+int getNumberOfBlacks(int)
+	+int getNumberOfWhites(int)
+	+boolean isCombinationValidColors(String)
+	+boolean isCombinationValidLength(String)
+	+int getCombinationLength()
+	+String getCombinationValidColors()
+	+boolean isWinner()
+	+boolean isGameOver()
+	+void checkProposedCombination(String)
+	+void accept(ControllersVisitor)
+}
+
+class mastermind.controllers.ResumeController {
+	#ResumeController(Game,State)
+	+void reset()
+	+void exit()
+	+void accept(ControllersVisitor)
+}
+
+class mastermind.controllers.StartController {
+	#StartController(Game,State)
+	+void accept(ControllersVisitor)
+}
+mastermind.controllers.Controller <|-down- mastermind.controllers.PlayController
+mastermind.controllers.Controller <|-down- mastermind.controllers.ResumeController
+mastermind.controllers.Controller <|-down- mastermind.controllers.StartController
+mastermind.controllers.Controller .left.> mastermind.controllers.ControllersVisitor
+mastermind.controllers.Logic -down-> "0..3" mastermind.controllers.Controller
+mastermind.controllers.PlayController ..> mastermind.controllers.ControllersVisitor
+mastermind.controllers.ResumeController ..> mastermind.controllers.ControllersVisitor
+mastermind.controllers.StartController ..> mastermind.controllers.ControllersVisitor
+mastermind.controllers.Controller *-down-> mastermind.models.Game
+mastermind.controllers.PlayController ..> mastermind.models.Game
+mastermind.controllers.PlayController ..> mastermind.models.ProposedCombination
+mastermind.controllers.ResumeController ..> mastermind.models.Game
+mastermind.controllers.StartController ..> mastermind.models.Game
+mastermind.controllers.Controller *-down-> mastermind.models.State
+mastermind.controllers.StartController ..> mastermind.models.State
+mastermind.controllers.PlayController ..> mastermind.models.State
+mastermind.controllers.ResumeController ..> mastermind.models.State
+mastermind.controllers.Logic *-down-> mastermind.models.Game
+mastermind.controllers.Logic *-down-> mastermind.models.State
+mastermind.controllers.Logic o-down-> "4" mastermind.type.StateValue
+mastermind.controllers.Logic o-down-> "0..4" mastermind.type.StateValue
+mastermind.controllers.ControllersVisitor ..> mastermind.controllers.PlayController 
+mastermind.controllers.ControllersVisitor ..> mastermind.controllers.ResumeController 
+mastermind.controllers.ControllersVisitor ..> mastermind.controllers.StartController
+@enduml
